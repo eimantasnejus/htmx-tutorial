@@ -58,4 +58,4 @@ def add_film(request):
 
     # return template with all user's films
     films = request.user.films.all()
-    return render(request, 'partials.film-list.html', {'films': films})
+    return render(request, 'partials/film-list.html', {'films': films})
