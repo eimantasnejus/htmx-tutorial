@@ -1,7 +1,11 @@
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http.response import HttpResponse
 from django.contrib.auth.views import LoginView
 from django.shortcuts import render
 from django.urls import reverse_lazy
+from django.views.decorators.http import require_http_methods
 from django.views.generic import FormView, TemplateView
 from django.views.generic.list import ListView
 from django.contrib.auth import get_user_model
@@ -29,7 +33,7 @@ class RegisterView(FormView):
         return super().form_valid(form)
 
 
-class FilmListView(ListView):
+class FilmListView(LoginRequiredMixin, ListView):
     template_name = 'films.html'
     model = Film
     context_object_name = 'films'
@@ -49,6 +53,7 @@ def check_username(request):
     return HttpResponse('<div id="username-error" class="success">Username is available</div>', status=200)
 
 
+@login_required
 def add_film(request):
     name = request.POST.get('filmname')
 
@@ -58,9 +63,12 @@ def add_film(request):
 
     # return template with all user's films
     films = request.user.films.all()
+    messages.success(request, f'{film.name} added to your list')
     return render(request, 'partials/film-list.html', {'films': films})
 
 
+@login_required
+@require_http_methods(["DELETE"])
 def delete_film(request, pk):
     """Remove film from user's list"""
     film = Film.objects.get(pk=pk)
@@ -69,3 +77,16 @@ def delete_film(request, pk):
     # return template fragment
     films = request.user.films.all()
     return render(request, 'partials/film-list.html', {'films': films})
+
+
+def search_film(request):
+    search_text = request.POST.get('search')
+
+    user_films = request.user.films.all()
+    results = Film.objects.filter(name__icontains=search_text).exclude(pk__in=user_films)
+    context = {"results": results}
+    return render(request, 'partials/search-results.html', context)
+
+
+def clear(request):
+    return HttpResponse('<div></div>', status=200)
