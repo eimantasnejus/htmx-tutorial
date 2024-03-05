@@ -1,7 +1,7 @@
 <div class="d-flex justify-content-end mb-4">
     <form>
         {% csrf_token %}
-        <label for="search">
+        <label>
             <input type="text"
                 hx-post="{% url 'search-film' %}"
                 hx-target="#results"

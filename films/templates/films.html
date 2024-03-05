@@ -6,7 +6,7 @@
             <p class="lead ml-0">My Films</p>
             <form class="d-flex align-items-center">
                 {% csrf_token %}
-                <label for="film-list" style="margin-bottom: inherit">
+                <label style="margin-bottom: inherit">
                     <input type="text" name="filmname" class="form-control-sm mr-2" placeholder="Enter a film" />
                 </label>
                 <button hx-post="{% url 'add-film' %}" hx-target="#film-list" type="submit" class="btn btn-success btn-sm">Add Film</button>
