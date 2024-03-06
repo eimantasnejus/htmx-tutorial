@@ -1,9 +1,26 @@
+<!-- Header, Film Search and add film button -->
+<div class="d-flex justify-content-between align-items-center">
+    <p class="lead ml-0">My Films</p>
+    <form class="d-flex align-items-center">
+        {% csrf_token %}
+        <label style="margin-bottom: inherit">
+            <input type="text" name="filmname" class="form-control-sm mr-2" placeholder="Enter a film" />
+        </label>
+        <button hx-post="{% url 'add-film' %}" hx-target="#film-list" type="submit" class="btn btn-success btn-sm">
+            Add Film
+        </button>
+    </form>
+</div>
+
+<hr/>
+
+<!-- Section to hold content below the second header -->
 <div class="d-flex justify-content-between">
 
-    <!-- Section for displaying all the UserFilms -->
+    <!-- Section for displaying all the UserFilms and related pop-ups -->
     <section class="col-6">
     
-        {# Section for displaying messages related to recent actions #}
+        <!-- Message pop-ups related to recent actions -->
         {% if messages %}
         <ul class="messages" hx-get="{% url 'clear' %}" hx-trigger="load delay:3s">
             {% for message in messages %}
@@ -23,7 +40,9 @@
                     <div>
                     <input type="hidden" name="ordered_user_film_ids" value="{{ user_film.pk }}"/>
                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                            #{{ user_film.order }} {{ user_film.film.name }}
+                            <a hx-get="{% url 'film-detail' user_film.pk %}" hx-target="#film-list">
+                                #{{ user_film.order }} {{ user_film.film.name }}
+                            </a>
                             <span class="badge badge-danger badge-pill" 
                                   style="cursor: pointer"
                                   hx-delete="{% url "delete-film" user_film.pk %}"

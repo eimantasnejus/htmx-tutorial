@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http.response import HttpResponse
 from django.contrib.auth.views import LoginView
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.decorators.http import require_http_methods
 from django.views.generic import FormView, TemplateView
@@ -104,3 +104,24 @@ def reorder(request):
         updated_user_film = UserFilms.objects.get(pk=user_film_pk)
         user_films.append(updated_user_film)
     return render(request, 'partials/film-list.html', {'user_films': user_films})
+
+
+@login_required
+def film_detail(request, pk):
+    user_film = get_object_or_404(UserFilms, user=request.user, pk=pk)
+    context = {"user_film": user_film}
+    return render(request, 'partials/film-detail.html', context)
+
+
+@login_required
+def film_partial(request):
+    user_films = UserFilms.objects.filter(user=request.user).order_by('order')
+    return render(request, 'partials/film-list.html', {'user_films': user_films})
+
+
+@login_required
+def upload_photo(request, pk):
+    user_film = get_object_or_404(UserFilms, user=request.user, pk=pk)
+    user_film.film.photo = request.FILES['photo']
+    user_film.film.save()
+    return render(request, 'partials/film-detail.html', {'user_film': user_film})

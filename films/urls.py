@@ -17,6 +17,9 @@ htmx_urlpatterns = [
     path('search-film', views.search_film, name='search-film'),
     path('clear/', views.clear, name='clear'),
     path('reorder/', views.reorder, name='reorder'),
+    path('film-detail/<int:pk>/', views.film_detail, name='film-detail'),
+    path('film-list-partial/', views.film_partial, name='film-list-partial'),
+    path('upload-photo/<int:pk>/', views.upload_photo, name='upload-photo'),
 ]
 
 urlpatterns += htmx_urlpatterns
