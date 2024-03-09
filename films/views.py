@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.paginator import PageNotAnInteger, EmptyPage
 from django.http.response import HttpResponse
 from django.contrib.auth.views import LoginView
 from django.shortcuts import render, get_object_or_404
@@ -36,8 +37,14 @@ class RegisterView(FormView):
 
 class FilmListView(LoginRequiredMixin, ListView):
     template_name = 'films.html'
-    model = Film
+    model = UserFilms
+    paginate_by = 2
     context_object_name = 'user_films'
+
+    def get_template_names(self):
+        if self.request.htmx:
+            return 'partials/film-list-elements.html'
+        return self.template_name
 
     def get_queryset(self):
         return UserFilms.objects.filter(user=self.request.user).order_by('order')

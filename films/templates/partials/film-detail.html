@@ -2,7 +2,11 @@
     <div>
         <h2 class="text-success mb-4">{{ user_film.film.name }}</h2>
         <p>This film is #{{ user_film.order }} in {{ user_film.user.username|title }}'s list</p>
-        <button class="btn btn-primary" hx-get="{% url 'film-list-partial' %}" hx-target="#film-list">
+        <button class="btn btn-primary"
+                hx-get="{% url 'film-list-partial' %}"
+                hx-target="#film-list"
+                hx-push-url="/films"
+        >
             Your List
         </button>
     </div>
