@@ -1,0 +1,21 @@
+-r requirements.in
+
+# Checks
+safety
+django-stubs
+mypy
+flake8
+flake8-pyproject
+ruff
+colorlog
+
+# Testing
+pytest
+pytest-cov  # for coverage report
+pytest-django  # for additional useful tools when testing
+pytest-xdist  # for parallel testing
+model-bakery  # for creating test data
+
+# Utility
+django-debug-toolbar
+django-extensions

@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     # 3rd party
     "widget_tweaks",
     "django_htmx",
+    "debug_toolbar",
     # Local
     'films.apps.FilmsConfig',
 ]
@@ -53,6 +54,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "django_htmx.middleware.HtmxMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 ROOT_URLCONF = 'BugBytesHtmx.urls'

@@ -1,0 +1,15 @@
+django
+django-widget-tweaks
+django-htmx
+django-import-export
+django-filter
+pyyaml
+django-solo
+django-ckeditor
+
+# Asynchronous tasks
+celery
+redis
+
+# Files
+pillow
