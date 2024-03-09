@@ -37,7 +37,7 @@ class RegisterView(FormView):
 class FilmListView(LoginRequiredMixin, ListView):
     template_name = "films.html"
     model = UserFilms
-    paginate_by = 2
+    paginate_by = 20
     context_object_name = "user_films"
 
     def get_template_names(self):
@@ -46,7 +46,7 @@ class FilmListView(LoginRequiredMixin, ListView):
         return self.template_name
 
     def get_queryset(self):
-        return UserFilms.objects.filter(user=self.request.user).order_by("order")
+        return UserFilms.objects.prefetch_related("film").filter(user=self.request.user).order_by("order")
 
 
 def check_username(request):
@@ -105,10 +105,15 @@ def reorder(request):
     """Update the order of user's films and return the updated list of films."""
     ordered_user_film_ids = request.POST.getlist("ordered_user_film_ids")
     user_films = []
+    updated_user_films = []
+    user_film_qs = UserFilms.objects.prefetch_related("film").filter(user=request.user)
     for i, user_film_pk in enumerate(ordered_user_film_ids, start=1):
-        UserFilms.objects.filter(pk=user_film_pk).update(order=i)
-        updated_user_film = UserFilms.objects.get(pk=user_film_pk)
-        user_films.append(updated_user_film)
+        user_film = next((u_film for u_film in user_film_qs if u_film.pk == int(user_film_pk)), None)
+        if user_film and user_film.order != i:
+            user_film.order = i
+            updated_user_films.append(user_film)
+        user_films.append(user_film)
+    UserFilms.objects.bulk_update(updated_user_films, ["order"])
     return render(request, "partials/film-list.html", {"user_films": user_films})
 
 

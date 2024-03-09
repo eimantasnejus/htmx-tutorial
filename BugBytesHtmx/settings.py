@@ -140,5 +140,6 @@ LOGIN_REDIRECT_URL = "index"
 LOGOUT_REDIRECT_URL = "index"
 
 INTERNAL_IPS = [
-    "127.0.0.1", "localhost",
+    "127.0.0.1",
+    "localhost",
 ]
