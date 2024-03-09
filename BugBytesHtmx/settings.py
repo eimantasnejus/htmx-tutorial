@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "debug_toolbar",
     # Local
     "films.apps.FilmsConfig",
+    "university.apps.UniversityConfig",
 ]
 
 MIDDLEWARE = [
