@@ -1,5 +1,5 @@
-from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.db import models
 from django.db.models.functions import Lower
 
 
@@ -13,7 +13,7 @@ class Film(models.Model):
     photo = models.ImageField(upload_to="film-photos", null=True, blank=True)
 
     class Meta:
-        ordering = [Lower('name')]
+        ordering = [Lower("name")]
 
     def __str__(self):
         return self.name
@@ -25,8 +25,8 @@ class UserFilms(models.Model):
     order = models.PositiveIntegerField()
 
     class Meta:
-        ordering = ['order']
-        unique_together = ['user', 'film']
+        ordering = ["order"]
+        unique_together = ["user", "film"]
 
     def __str__(self):
         return f"{self.user} - {self.film}"
