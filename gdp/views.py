@@ -58,27 +58,37 @@ def gdp_index(request):
 
 
 def gdp_line(request):
+    """Render the GDP multiple lines chart page."""
+    # Get the list of countries
     countries = GDP.objects.values_list("country", flat=True).distinct()
-    country = request.GET.get("country", "Lithuania")
+    selected_countries = request.GET.getlist("country", ["Lithuania"])[:5]
+    colors_list = ["red", "green", "blue", "orange", "purple"][0 : len(selected_countries)]
 
-    gdps = GDP.objects.filter(country=country).order_by("year")
-    years = [gdp.year for gdp in gdps]
-    gdp_values = [gdp.gdp for gdp in gdps]
+    year_data = []
+    gdp_data = []
 
-    cds = ColumnDataSource(data=dict(years=years, gdp_values=gdp_values))
+    for multiple_country in selected_countries:
+        gdps = GDP.objects.filter(country=multiple_country).order_by("year")
+        year_data.append([gdp.year for gdp in gdps])
+        gdp_data.append([gdp.gdp for gdp in gdps])
 
-    fig = figure(height=500, title=f"GDP of {country}")
+    cds = ColumnDataSource(
+        data=dict(years=year_data, gdp_values=gdp_data, names=selected_countries, colors=colors_list)
+    )
+
+    # Create the line chart
+    fig = figure(height=500, title=f"GDP of {', '.join(selected_countries)}")
     fig.title.align = "center"
     fig.title.text_font_size = "1.5em"
     fig.yaxis[0].formatter = NumeralTickFormatter(format="$0.0a")
+    fig.multi_line(source=cds, xs="years", ys="gdp_values", line_width=2, legend_group="names", line_color="colors")
+    fig.legend.location = "top_left"
 
-    fig.line(source=cds, x="years", y="gdp_values", line_width=2)
-
+    # Prepare the chart for rendering
     script, div = components(fig)
-
     context = {
         "countries": countries,
-        "selected_country": country,
+        "selected_countries": selected_countries,
         "script": script,
         "div": div,
     }

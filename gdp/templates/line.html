@@ -14,9 +14,10 @@
                 autocomplete="off"
                 hx-get={% url 'gdp_line' %}
                 hx-target="#linechart"
+                multiple
             >
                 {% for country in countries %}
-                    <option value="{{ country }}" {% if country == selected_country %}selected{% endif %}>{{ country }}</option>
+                    <option value="{{ country }}" {% if country == selected_countries %}selected{% endif %}>{{ country }}</option>
                 {% endfor %}
             </select>
         </div>
