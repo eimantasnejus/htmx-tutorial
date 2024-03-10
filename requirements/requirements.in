@@ -15,5 +15,5 @@ redis
 # Files
 pillow
 
-# Charts
+# Visualisation
 bokeh

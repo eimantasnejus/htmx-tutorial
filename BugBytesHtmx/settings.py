@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     # Local
     "films.apps.FilmsConfig",
     "university.apps.UniversityConfig",
+    "gdp.apps.GdpConfig",
 ]
 
 MIDDLEWARE = [
