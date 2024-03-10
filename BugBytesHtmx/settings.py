@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "films.apps.FilmsConfig",
     "university.apps.UniversityConfig",
     "gdp.apps.GdpConfig",
+    "scores.apps.ScoresConfig",
 ]
 
 MIDDLEWARE = [

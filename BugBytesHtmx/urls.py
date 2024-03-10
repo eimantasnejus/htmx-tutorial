@@ -7,6 +7,7 @@ urlpatterns = [
     path("", include("films.urls")),
     path("university/", include("university.urls")),
     path("gdp/", include("gdp.urls")),
+    path("scores/", include("scores.urls")),
     path("admin/", admin.site.urls),
     path("__debug__/", include("debug_toolbar.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
