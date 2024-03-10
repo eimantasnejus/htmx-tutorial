@@ -55,3 +55,35 @@ def gdp_index(request):
     if request.htmx:
         return render(request, "partials/gdp-bar.html", context)
     return render(request, "gdp_index.html", context)
+
+
+def gdp_line(request):
+    countries = GDP.objects.values_list("country", flat=True).distinct()
+    country = request.GET.get("country", "Lithuania")
+
+    gdps = GDP.objects.filter(country=country).order_by("year")
+    years = [gdp.year for gdp in gdps]
+    gdp_values = [gdp.gdp for gdp in gdps]
+
+    cds = ColumnDataSource(data=dict(years=years, gdp_values=gdp_values))
+
+    fig = figure(height=500, title=f"GDP of {country}")
+    fig.title.align = "center"
+    fig.title.text_font_size = "1.5em"
+    fig.yaxis[0].formatter = NumeralTickFormatter(format="$0.0a")
+
+    fig.line(source=cds, x="years", y="gdp_values", line_width=2)
+
+    script, div = components(fig)
+
+    context = {
+        "countries": countries,
+        "selected_country": country,
+        "script": script,
+        "div": div,
+    }
+
+    if request.htmx:
+        # TODO: Add a partial for the line chart or rename existing partial to more generic name
+        return render(request, "partials/gdp-bar.html", context)
+    return render(request, "line.html", context)
