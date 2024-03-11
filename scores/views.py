@@ -10,8 +10,8 @@ def fixtures(request):
     context = {"fixtures": fixtures, "is_all_completed": is_all_completed}
     if request.htmx:
         if is_all_completed:
-            response = render(request, 'partials/fixturelist.html', context, status=200)
-            response['HX-Refresh'] = 'true'
+            response = render(request, "partials/fixturelist.html", context, status=200)
+            response["HX-Refresh"] = "true"
             return response
-        return render(request, 'partials/fixturelist.html', context)
-    return render(request, 'fixtures.html', context)
+        return render(request, "partials/fixturelist.html", context)
+    return render(request, "fixtures.html", context)
