@@ -13,3 +13,11 @@
     transform: rotate(45deg);
     transition: all ease-in 0.5s;
 }
+
+.indicator-style {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-left: -50px;
+    margin-top: -50px;
+}
