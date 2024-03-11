@@ -3,6 +3,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
+from django.core.paginator import Paginator
 from django.http.response import HttpResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse_lazy
@@ -69,22 +70,31 @@ def add_film(request):
     if not UserFilms.objects.filter(user=request.user, film=film).exists():
         UserFilms.objects.create(user=request.user, film=film, order=get_max_order(request.user))
 
-    # return template with all user's films
-    user_films = UserFilms.objects.filter(user=request.user).order_by("order")
+    # return success message
     messages.success(request, f"{film.name} added to your list")
-    return render(request, "partials/film-list.html", {"user_films": user_films})
+
+    # return paginated template with all user's films
+    user_film_qs = UserFilms.objects.filter(user=request.user).order_by("order")
+    paginator = Paginator(user_film_qs, 20)
+    page_number = request.GET.get("page", 1)
+    user_films = paginator.get_page(page_number)
+    return render(request, "partials/film-list.html", {"user_films": user_films, "page_obj": user_films})
 
 
 @login_required
 @require_http_methods(["DELETE"])
 def delete_film(request, pk):
     """Remove film from user's list"""
+    # Delete and reorder user's films
     UserFilms.objects.filter(pk=pk).delete()
-
-    # return template fragment
     reorder_user_films(request.user)
-    user_films = UserFilms.objects.filter(user=request.user).order_by("order")
-    return render(request, "partials/film-list.html", {"user_films": user_films})
+
+    # Return paginated list of films
+    user_film_qs = UserFilms.objects.filter(user=request.user).order_by("order")
+    paginator = Paginator(user_film_qs, 20)
+    page_number = request.GET.get("page", 1)
+    user_films = paginator.get_page(page_number)
+    return render(request, "partials/film-list.html", {"user_films": user_films, "page_obj": user_films})
 
 
 def search_film(request):
@@ -114,7 +124,12 @@ def reorder(request):
             updated_user_films.append(user_film)
         user_films.append(user_film)
     UserFilms.objects.bulk_update(updated_user_films, ["order"])
-    return render(request, "partials/film-list.html", {"user_films": user_films})
+    # Return paginated list of films
+    user_film_qs = UserFilms.objects.filter(user=request.user).order_by("order")
+    paginator = Paginator(user_film_qs, 20)
+    page_number = request.GET.get("page")
+    user_films = paginator.get_page(page_number)
+    return render(request, "partials/film-list.html", {"user_films": user_films, "page_obj": user_films})
 
 
 @login_required
