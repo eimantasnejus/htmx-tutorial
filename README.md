@@ -3,6 +3,7 @@
 ## Intro
 
 This is a demo project in order to get a sense of capabilities of HTMX.
+Most of the functionality is implemented following the tutorial on [BugBytes](https://youtube.com/playlist?list=PL-2EBeDYMIbRByZ8GXhcnQSuv2dog4JxY&si=tdDkAjA1yyWSBNEN).
 
 ## Requirements
 

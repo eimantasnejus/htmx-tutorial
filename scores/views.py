@@ -13,9 +13,7 @@ def fixtures(request):
 
     search = request.GET.get("search")
     if search:
-        fixtures = fixtures.filter(
-            Q(home_team__name__icontains=search) | Q(away_team__name__icontains=search)
-        )
+        fixtures = fixtures.filter(Q(home_team__name__icontains=search) | Q(away_team__name__icontains=search))
 
     context = {"fixtures": fixtures, "is_all_completed": is_all_completed}
     if request.htmx:

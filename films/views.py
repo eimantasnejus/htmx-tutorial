@@ -102,7 +102,10 @@ def search_film(request):
     search_text = request.POST.get("search")
 
     user_film_ids = UserFilms.objects.filter(user=request.user).values_list("film", flat=True)
-    results = Film.objects.filter(name__icontains=search_text).exclude(pk__in=user_film_ids)
+    if not search_text:
+        results = Film.objects.none()
+    else:
+        results = Film.objects.filter(name__icontains=search_text).exclude(pk__in=user_film_ids)
     context = {"results": results}
     return render(request, "partials/search-results.html", context)
 
